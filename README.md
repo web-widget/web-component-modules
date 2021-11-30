@@ -30,6 +30,11 @@ export default class extends HTMLElement {
 }
 ```
 
+这样我们将得到一些好处：
+
+* 组件的 HTML 可以自己管理依赖关系，就像管理图片一样简单
+* 收敛了组件使用 `customElements.define` 的副作用，使得组件的使用者真正拥有了标签命名权。例如可以预先定义 `<ui-dialog>` 这样的通用的组件抽象，然后交给外部的 Web Component UI 库去实现这个标签，这样完成了和具体的 Web Component UI 的实现解耦
+
 ## 替代方案对比
 
 目前 W3C 有两个关于解决此问题的提案，分别是：
@@ -96,7 +101,7 @@ WebComponentModule.loaders.define('system', async options => {
 <my-element is="web-component-module" import="@org/app"></my-element>
 ```
 
-`import` 与 `src` 属性的不同：`import` 属性不会自动补全路径，加载器会优先读取它的原始值去加载模块。
+`import` 与 `src` 属性的不同：`import` 属性不会自动补全路径，加载器会优先读取它的原始值去加载模块，因此它能够支持裸模块。
 
 ### 处理浏览器兼容
 
