@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" main="IE=edge">
+  <title>Web Component Modules</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="importmap">
+    {
+      "imports": {
+        "@main": "/index.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <hello-world is="web-component-module" src="./index.js">
+    <p slot="main">hello wrold</p>
+  </hello-world>
+
+  <hello-world is="web-component-module" src="./index.js">
+    <p slot="main">hello wrold2</p>
+  </hello-world>
+
+  <my-element is="web-component-module" import="@main">
+    <p slot="main">hello web-component-module</p>
+  </my-element>
+
+  <script type="module">
+    import { WebComponentModule } from '../src/index.js';
+
+    WebComponentModule.update(document);
+
+    const element = document.createElement('xxx-xxx');
+    element.setAttribute('is', 'web-component-module');
+    element.setAttribute('src', './index.js');
+    element.innerHTML = '<p slot="main">hello web-component-module2</p>';
+    document.body.appendChild(element);
+    
+  </script>
+</body>
+
+</html>
