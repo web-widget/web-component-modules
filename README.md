@@ -10,7 +10,7 @@ ES module 的引入为 JavaScript 开发人员提供了一些好处，包括更�
 
 ## 提议内容
 
-实现一个 Web Component Modules 的加载器，它通过 `is="web-component-module"` 属性来识别 Web Component Modules，然后根据 `src` 或者 `import` 属性来载入自定义元素的 Class、完成自定元素注册等流程。
+提议 Web Component Modules 的规范，它通过 `is="web-component-module"` 属性来表示为 Web Component Modules，这样加载器可以根据 `src` 或者 `import` 属性来载入自定义元素的 Class、完成自定元素注册等流程。
 
 ```html
 <my-element is="web-component-module" src="./index.js"></my-element>
@@ -34,15 +34,8 @@ export default class extends HTMLElement {
 
 目前 W3C 有两个关于解决此问题的提案，分别是：
 
-* [html-imports](https://www.w3.org/TR/html-imports/)
-* [html-modules-explainer](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/html-modules-explainer.md)
-
-[html-imports](https://www.w3.org/TR/html-imports/) 提议（并在Chromium中实现），但它们是独立于 ES6 模块开发的，有几个限制：
-
-* **全局对象污染**：默认情况下，在 html-imports 中创建的变量显示在全局对象上
-* **阻塞执行**：html-imports 的解析将阻止主文档的解析器
-
-[html-modules-explainer](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/html-modules-explainer.md) 解决了 [html-imports](https://www.w3.org/TR/html-imports/) 的一些问题，但是没有浏览器实现它，并且也没有任何工具来支持它。
+* [html-imports](https://www.w3.org/TR/html-imports/) 是独立于 ES6 模块开发的，目前已经被废弃
+* [html-modules-explainer](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/html-modules-explainer.md) 它设计了一个更好的与 ES module 结合的提案，但目前还没有浏览器或者开发生态支持。它和 Web Component Modules 提案并不冲突，但 Web Component Modules 是为了简化依赖关系管理，并且确保能够立即在生产环境使用
 
 ## 指引和例子
 
