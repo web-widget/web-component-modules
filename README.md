@@ -32,7 +32,7 @@ export default class extends HTMLElement {
 
 这样我们将得到一些好处：
 
-* 组件的 HTML 可以自己管理依赖关系，就像管理图片一样简单
+* 组件的 HTML 可以自己管理依赖的 JavaScript
 * 收敛了组件使用 `customElements.define` 的副作用，使得组件的使用者真正拥有了标签命名权。例如可以预先定义 `<ui-dialog>` 这样的通用的组件抽象，然后交给外部的 Web Component UI 库去实现这个标签，这样完成了和具体的 Web Component UI 库的实现解耦
 
 ## 替代方案对比
