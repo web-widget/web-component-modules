@@ -10,34 +10,21 @@ ES module 的引入为 JavaScript 开发人员提供了一些好处，包括更�
 
 ## 提议内容
 
-提议 Web Component Modules 的规范，它通过 `is="web-component-module"` 属性来表示为 Web Component Modules，这样加载器可以根据 `src` 或者 `import` 属性来载入自定义元素的 Class、完成自定元素注册等流程。
+在自定义元素上定义一个名称为 `is="web-component-module"` 属性来表示为 Web Component Modules，这样加载器可以根据 `src` 或者 `import` 属性来载入自定义元素的 Class、完成自定元素注册等流程。
 
 ```html
 <my-element is="web-component-module" src="./index.js"></my-element>
-<hello-world is="web-component-module" src="./index.js"></hello-world>
+<hello-world is="web-component-module" import="@org/ui-widget"></hello-world>
 ```
 
-```js
-// index.js
-export default class extends HTMLElement {
-  constructor() {
-    super();
-    const shadowRoot = this.attachShadow({ mode: 'closed' });
-    shadowRoot.innerHTML = `
-      <slot name="main">no content</slot>
-    `;
-  }
-}
-```
+这样我们将得到明显好处：
 
-这样我们将得到一些好处：
-
-* 组件的 HTML 可以自己管理依赖的 JavaScript
-* 收敛了组件使用 `customElements.define` 的副作用，使得组件的使用者真正拥有了标签命名权。例如可以预先定义 `<ui-dialog>` 这样的通用的组件抽象，然后交给外部的 Web Component UI 库去实现这个标签，这样完成了和具体的 Web Component UI 库的实现解耦
+* 组件的标签可以自己管理依赖的 JavaScript，而 JavaScript 可以管理内部更多的资源依赖
+* 收敛了组件使用 `customElements.define` 的副作用，使得组件的使用者真正拥有了标签命名权。例如可以预先定义 `<ui-dialog>` 这样的通用的组件抽象，然后交给外部的 Web Component UI 库去实现这个标签，这样完成了和具体的 Web Component UI 库的实现解耦，让工程能够适应长久的变化
 
 ## 替代方案对比
 
-目前 W3C 有两个关于解决此问题的提案，分别是：
+目前 W3C 有两个关于解决此问题的相关提案，分别是：
 
 * [html-imports](https://www.w3.org/TR/html-imports/) 是独立于 ES6 模块开发的，目前已经被废弃
 * [html-modules-explainer](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/html-modules-explainer.md) 它设计了一个更好的与 ES module 结合的提案，但目前还没有浏览器或者开发生态支持。它和 Web Component Modules 提案并不冲突，但 Web Component Modules 是为了简化依赖关系管理，并且确保能够立即在生产环境使用
@@ -92,6 +79,7 @@ WebComponentModule.loaders.define('system', async options => {
   }
 }
 </script>
+
 <my-element is="web-component-module" import="@org/app"></my-element>
 ```
 
@@ -99,7 +87,7 @@ WebComponentModule.loaders.define('system', async options => {
 
 ### 处理浏览器兼容
 
-`system` 格式被设计为 `esm` 的过渡格式，它解决了 `esm` [import maps](https://github.com/WICG/import-maps) 浏览器兼容性的问题。几乎所有的构建工具都支持输出 `system` 格式，因此我们推荐在生产环境中使用它，以便未来能够无缝过渡到 Web 标准。
+`system` 格式被设计为 `esm` 的过渡格式，它解决了 `esm` [import maps](https://github.com/WICG/import-maps) 浏览器兼容性的问题。由于几乎所有的构建工具都支持输出 `system` 格式，因此我们推荐在生产环境中使用它，以便未来能够无缝过渡到 Web 标准。
 
 ```html
 <script type="systemjs-importmap">
