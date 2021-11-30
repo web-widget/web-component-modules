@@ -1,7 +1,5 @@
 # Web Component 模块系统
 
-- 作者：糖饼
-
 # 目标
 
 为 Web Component 设计一个模块系统，使 Web Component 更好的实现良好的组件化，以便集成在现有的 ES module 的基础设施中，并且能够在当今的浏览器中立即能工作。
@@ -79,3 +77,46 @@ export default class extends HTMLElement {
 
 [html-modules-explainer](https://github.com/WICG/webcomponents/blob/gh-pages/proposals/html-modules-explainer.md) 解决了 [html-imports](https://www.w3.org/TR/html-imports/) 的一些问题，但是没有浏览器实现它，并且也没有任何工具来支持它。
 
+## 指引和例子
+
+### 安装加载器
+
+```bash
+npm install @web-widget/web-component-module
+```
+
+### 使用
+
+```html
+<hello-world is="web-component-module" src="./index.js">
+  <p slot="main">hello wrold</p>
+</hello-world>
+
+<script type="module">
+  import { WebComponentModule } from '@web-widget/web-component-module';
+  WebComponentModule.update(document);
+</script>
+```
+
+### 编写插件
+
+例如支持 SystemJS 格式的插件：
+
+```js
+WebComponentModule.loaders.define('system', async options => {
+  const nameOrPath = options.import || options.src;
+  if (!nameOrPath) {
+    throw new Error(`No 'src' or 'import' attributes were found`);
+  }
+
+  return System.import(/* webpackIgnore: true */ nameOrPath).then(
+    module => module.default || module
+  );
+});
+```
+
+使用 `type="system"` 来指定 JavaScript 自定义模块类型：
+
+```html
+<my-element is="web-component-module" type="system" import="./index.js"></my-element>
+```

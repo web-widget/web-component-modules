@@ -130,8 +130,8 @@ export class WebComponentModule {
   }
 }
 
-globalLoaders.define('module', async view => {
-  const nameOrPath = view.import || view.src;
+WebComponentModule.loaders.define('module', async options => {
+  const nameOrPath = options.import || options.src;
   if (!nameOrPath) {
     throw new Error(`No 'src' or 'import' attributes were found`);
   }
