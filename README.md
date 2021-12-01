@@ -19,7 +19,7 @@ ES module 的引入为 JavaScript 开发人员提供了一些好处，包括更�
 
 这样我们将得到明显好处：
 
-* 组件的标签可以自己管理依赖的 JavaScript，而 JavaScript 可以管理内部更多的资源依赖
+* 组件的标签可以自己管理依赖的 JavaScript，删除标签后也意味着删除了 JavaScript 依赖，这有利于一些可视化的网页编辑器进行操作
 * 收敛了组件使用 `customElements.define` 的副作用，使得组件的使用者真正拥有了标签命名权。例如可以预先定义 `<ui-dialog>` 这样的通用的组件抽象，然后交给外部的 Web Component UI 库去实现这个标签，这样完成了和具体的 Web Component UI 库的实现解耦，让工程能够适应长久的变化
 
 ## 替代方案对比
@@ -46,7 +46,7 @@ WebComponentModule.update(document);
 
 ### 编写加载器插件
 
-通过插件可以支持 ES module 以外的格式。
+通过插件可以支持 ES module 以外的格式，例如下述代码演示了如何支持 SystemJS 的格式：
 
 ```js
 WebComponentModule.loaders.define('system', async options => {
@@ -56,12 +56,10 @@ WebComponentModule.loaders.define('system', async options => {
   }
 
   return System.import(/* webpackIgnore: true */ nameOrPath).then(
-    module => module.default || module
+    module => module.default
   );
 });
 ```
-
-使用 `type="system"` 来指定 JavaScript 自定义模块类型：
 
 ```html
 <my-element is="web-component-module" type="system" import="./index.js"></my-element>
