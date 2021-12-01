@@ -44,27 +44,6 @@ import { WebComponentModule } from '@web-widget/web-component-module';
 WebComponentModule.update(document);
 ```
 
-### 编写加载器插件
-
-通过插件可以支持 ES module 以外的格式，例如下述代码演示了如何支持 SystemJS 的格式：
-
-```js
-WebComponentModule.loaders.define('system', async options => {
-  const nameOrPath = options.import || options.src;
-  if (!nameOrPath) {
-    throw new Error(`No 'src' or 'import' attributes were found`);
-  }
-
-  return System.import(/* webpackIgnore: true */ nameOrPath).then(
-    module => module.default
-  );
-});
-```
-
-```html
-<my-element is="web-component-module" type="system" import="./index.js"></my-element>
-```
-
 ### 裸模块
 
 [import maps](https://github.com/WICG/import-maps) 这样的标准将允许浏览器理解这些类型的导入，而无需转换步骤，这使得我们可以在浏览器中实现版本管理与共享依赖，而不需要 package.json 文件与构建工具。
@@ -83,9 +62,30 @@ WebComponentModule.loaders.define('system', async options => {
 
 `import` 与 `src` 属性的不同：`import` 属性不会自动补全路径，加载器会优先读取它的原始值去加载模块，因此它能够支持裸模块。
 
-### 处理浏览器兼容
+### 支持 SystemJS
 
 `system` 格式被设计为 `esm` 的过渡格式，它解决了 `esm` [import maps](https://github.com/WICG/import-maps) 浏览器兼容性的问题。由于几乎所有的构建工具都支持输出 `system` 格式，因此我们推荐在生产环境中使用它，以便未来能够无缝过渡到 Web 标准。
+
+通过插件可以支持 ES module 以外的格式，例如下述代码演示了如何支持 SystemJS 的格式：
+
+```js
+WebComponentModule.loaders.define('system', async options => {
+  const nameOrPath = options.import || options.src;
+  if (!nameOrPath) {
+    throw new Error(`No 'src' or 'import' attributes were found`);
+  }
+
+  return System.import(/* webpackIgnore: true */ nameOrPath).then(
+    module => module.default
+  );
+});
+```
+
+```html
+<my-element is="web-component-module" type="system" src="./index.js"></my-element>
+```
+
+使用裸模块：
 
 ```html
 <script type="systemjs-importmap">
