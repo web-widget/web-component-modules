@@ -69,6 +69,9 @@ WebComponentModule.update(document);
 通过插件可以支持 ES module 以外的格式，例如下述代码演示了如何支持 SystemJS 的格式：
 
 ```js
+import 'systemjs/s.js';
+import { WebComponentModule } from '@web-widget/web-component-module';
+
 WebComponentModule.loaders.define('system', async options => {
   const nameOrPath = options.import || options.src;
   if (!nameOrPath) {
@@ -79,6 +82,8 @@ WebComponentModule.loaders.define('system', async options => {
     module => module.default
   );
 });
+
+WebComponentModule.update(document);
 ```
 
 ```html
