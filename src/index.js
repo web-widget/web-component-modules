@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file, no-dupe-class-members, class-methods-use-this */
-/* global customElements, Node, URL, MutationObserver */
+/* global customElements, Node, URL, MutationObserver, HTMLScriptElement */
 function createRegistry() {
   const map = new Map();
   return {
@@ -11,6 +11,19 @@ function createRegistry() {
       map.set(name, factory);
     }
   };
+}
+
+// @see https://github.com/WICG/import-maps#feature-detection
+const supportsImportMaps =
+  HTMLScriptElement.supports && HTMLScriptElement.supports('importmap');
+
+function importModule(target) {
+  if (!supportsImportMaps && typeof importShim === 'function') {
+    // @see https://github.com/guybedford/es-module-shims
+    // eslint-disable-next-line no-undef
+    return importShim(target);
+  }
+  return import(/* @vite-ignore */ /* webpackIgnore: true */ target);
 }
 
 const LOADING = Symbol('loading');
@@ -136,7 +149,5 @@ WebComponentModule.loaders.define('module', async options => {
     throw new Error(`No 'src' or 'import' attributes were found`);
   }
 
-  return import(/* webpackIgnore: true */ nameOrPath).then(
-    module => module.default || module
-  );
+  return importModule(nameOrPath).then(module => module.default || module);
 });
