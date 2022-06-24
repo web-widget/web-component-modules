@@ -1,6 +1,6 @@
 {
   "name": "@web-widget/web-component-modules",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Web Component Modules",
   "source": "src/index.js",
   "main": "dist/cjs/main.js",
